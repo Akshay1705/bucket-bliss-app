@@ -82,6 +82,21 @@ app.put('/api/wishes/:id', (req, res) => {
   });
 });
 
+app.delete('/api/wishes/:id', (req, res) => {
+  const { id } = req.params;
+
+  const index = wishes.findIndex(wish => wish.id === parseInt(id));
+
+  if (index === -1) {
+    return res.status(404).json({ error: 'Wish not found' });
+  }
+
+  // Remove the wish from array
+  wishes.splice(index, 1);
+
+  res.json({ message: 'Wish deleted successfully' });
+});
+
 
 
 //Starts the server on a specific port
