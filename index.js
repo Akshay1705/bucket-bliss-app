@@ -16,7 +16,7 @@ app.get('/api/wishes', (req, res) => {
   if (wishes[1]) {
     wishes[1].isCompleted = true;
   }
-  
+
   let filteredWishes = wishes;
 
   // Filter by category (if given)
@@ -58,6 +58,30 @@ app.post('/api/wishes', (req, res) => {
 
   res.status(201).json({ message: 'Wish added successfully', wish: newWish });
 });
+
+app.put('/api/wishes/:id', (req, res) => {
+  const { id } = req.params;
+  const { title, category, targetDate, isCompleted } = req.body;
+
+  // Find the wish by ID (convert to number for comparison)
+  const wishIndex = wishes.findIndex(wish => wish.id === parseInt(id));
+
+  if (wishIndex === -1) {
+    return res.status(404).json({ error: 'Wish not found' });
+  }
+
+  // Update fields if they are provided
+  if (title !== undefined) wishes[wishIndex].title = title;
+  if (category !== undefined) wishes[wishIndex].category = category;
+  if (targetDate !== undefined) wishes[wishIndex].targetDate = targetDate;
+  if (isCompleted !== undefined) wishes[wishIndex].isCompleted = isCompleted;
+
+  res.json({
+    message: 'Wish updated successfully',
+    wish: wishes[wishIndex]
+  });
+});
+
 
 
 //Starts the server on a specific port
